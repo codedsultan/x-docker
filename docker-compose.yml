@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # Laravel Application
+  blog:
+    build:
+      context: ../laravel
+      dockerfile: Dockerfile
+    container_name: laravel-app
+    restart: unless-stopped
+    volumes:
+      - ../laravel:/var/www/html
+    environment:
+      - APP_ENV=production
+      - DB_HOST=mysql
+      - REDIS_HOST=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - app-network
+
+  # FastAPI Application
+  api:
+    build:
+      context: ../fastapi
+      dockerfile: Dockerfile
+    container_name: fastapi-app
+    restart: unless-stopped
+    volumes:
+      - ../fastapi:/app
+    environment:
+      - ENVIRONMENT=production
+    networks:
+      - app-network
+
+  # Node.js Application
+  app:
+    build:
+      context: ../nodejs
+      dockerfile: Dockerfile
+    container_name: nodejs-app
+    restart: unless-stopped
+    volumes:
+      - ../nodejs:/app
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+
+  # Nginx Service
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../laravel:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    depends_on:
+      - blog
+      - api
+      - app
+    networks:
+      - app-network
+
+  # MySQL Service
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d
+    networks:
+      - app-network
+
+  # Redis Service
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - ./redis/data:/data
+    networks:
+      - app-network
+
+  # Laravel Queue Worker
+  laravel-queue:
+    build:
+      context: ../laravel
+      dockerfile: Dockerfile
+    container_name: laravel-queue
+    restart: unless-stopped
+    command: php artisan queue:work
+    depends_on:
+      - laravel-app
+      - redis
+    volumes:
+      - ../laravel:/var/www/html
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
+  certbot_conf:
+  certbot_www:
