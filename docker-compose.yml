@@ -37,15 +37,18 @@ services:
 
   # Node.js Application
   app:
-    build:
-      context: ../nodejs
-      dockerfile: Dockerfile
+    # build:
+    #   context: ../nodejs
+    #   dockerfile: Dockerfile
+    image: ghcr.io/codedsultan/xurl:latest
     container_name: nodejs-app
     restart: unless-stopped
     volumes:
       - ../nodejs:/app
-      - app_db_data_sqlite:/var/lib/kutt
-      - custom:/kutt/custom
+      # - app_db_data_sqlite:/var/lib/kutt
+      # - custom:/kutt/custom
+      - ../nodejs/db_data_sqlite:/var/lib/kutt  # Store the SQLite database inside nodejs folder
+      - ../nodejs/custom:/kutt/custom 
     env_file:
       - ../nodejs/.env
     environment:
@@ -124,5 +127,5 @@ volumes:
   redis_data:
   certbot_conf:
   certbot_www:
-  app_db_data_sqlite:
-  custom:
+  # app_db_data_sqlite:
+  # custom:
