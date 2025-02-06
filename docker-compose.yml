@@ -118,16 +118,29 @@ services:
     networks:
       - app-network
 
+  # certbot:
+  #   image: certbot/certbot
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/www:/var/www/certbot
+  #   # Remove the certonly command to run interactively
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
   certbot:
-    image: certbot/certbot
+    image: certbot/dns-namecom
     volumes:
       - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    # Remove the certonly command to run interactively
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    networks:
-      - app-network
-    restart: unless-stopped
+      - ./certbot/www:/var/www/certbot  # Persist certificates
+      - ./namecom.ini:/etc/letsencrypt/namecom.ini
+    command: certonly \
+      --agree-tos --non-interactive \
+      --dns-namecom --dns-namecom-credentials /etc/letsencrypt/namecom.ini \
+      -d *.xurl.fyi -d xurl.fyi
+    environment:
+      - EMAIL=codedsultan@gmail.com
+
 networks:
   app-network:
     driver: bridge
