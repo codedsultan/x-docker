@@ -42,6 +42,7 @@ jobs:
             set -e  # Exit on error
             cd "${{ secrets.DEPLOY_PATH }}"
             GIT_SSH_COMMAND='ssh -i /home/deploy/.ssh/nodejs_deploy_key' git pull origin main -f
+            echo ${{ secrets.PAT_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker-compose pull app nginx
             docker-compose up -d app nginx
             
