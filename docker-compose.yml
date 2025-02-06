@@ -121,10 +121,10 @@ networks:
   app-network:
     driver: bridge
 
-volumes:
-  mysql_data:
-  redis_data:
-  certbot_conf:
-  certbot_www:
+# volumes:
+#   mysql_data:
+#   redis_data:
+#   certbot_conf:
+#   certbot_www:
   # app_db_data_sqlite:
   # custom:
