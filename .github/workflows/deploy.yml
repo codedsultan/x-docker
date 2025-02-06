@@ -32,6 +32,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}" << 'ENDSSH'
             set -e  # Exit on error
+            export DOCKER_BUILDKIT=1 
             cd "${{ secrets.DEPLOY_PATH }}"
             GIT_SSH_COMMAND='ssh -i /home/deploy/.ssh/nodejs_deploy_key' git pull origin main -f
             docker-compose build app nginx
