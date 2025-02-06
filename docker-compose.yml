@@ -133,7 +133,7 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot  # Persist certificates
-      - ./namecom-credentials.ini:/etc/letsencrypt/namecom-credentials.ini
+      - ./namecom.ini:/etc/letsencrypt/namecom.ini
     command: certonly \
       --agree-tos --non-interactive \
       --dns-namecom --dns-namecom-credentials /etc/letsencrypt/namecom.ini \
