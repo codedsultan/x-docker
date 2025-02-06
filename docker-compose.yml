@@ -104,7 +104,7 @@ services:
     restart: unless-stopped
     command: php artisan queue:work
     depends_on:
-      - laravel-app
+      - blog
       - redis
     volumes:
       - ../laravel:/var/www/html
