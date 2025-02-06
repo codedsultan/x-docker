@@ -33,7 +33,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}" << 'ENDSSH'
             set -e  # Exit on error
-            cd ../docker
+            cd "${{ secrets.DEPLOY_PATH }}"
             docker-compose pull app nginx
             docker-compose up -d app nginx
             
