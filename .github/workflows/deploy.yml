@@ -20,11 +20,11 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          
+
       - name: Configure git to use merge
         run: git config --global pull.rebase false
 
-      - name: Deploy Node.js Application
+      - name: Deploy Nginx
         env:
           SERVER_IP: ${{ secrets.SERVER_IP }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
