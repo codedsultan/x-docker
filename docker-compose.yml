@@ -44,8 +44,12 @@ services:
     restart: unless-stopped
     volumes:
       - ../nodejs:/app
+      - app_db_data_sqlite:/var/lib/kutt
+      - custom:/kutt/custom
+    env_file:
+      - ./nodejs/.env
     environment:
-      - NODE_ENV=production
+      DB_FILENAME: "/var/lib/kutt/data.sqlite"
     networks:
       - app-network
 
@@ -120,3 +124,5 @@ volumes:
   redis_data:
   certbot_conf:
   certbot_www:
+  app_db_data_sqlite:
+  custom:
