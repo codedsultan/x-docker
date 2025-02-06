@@ -47,7 +47,7 @@ services:
       - app_db_data_sqlite:/var/lib/kutt
       - custom:/kutt/custom
     env_file:
-      - ./nodejs/.env
+      - ../nodejs/.env
     environment:
       DB_FILENAME: "/var/lib/kutt/data.sqlite"
     networks:
