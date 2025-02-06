@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   # Laravel Application
-  laravel-app:
+  blog:
     build:
       context: ../laravel
       dockerfile: Dockerfile
@@ -22,7 +22,7 @@ services:
       - app-network
 
   # FastAPI Application
-  fastapi-app:
+  api:
     build:
       context: ../fastapi
       dockerfile: Dockerfile
@@ -36,7 +36,7 @@ services:
       - app-network
 
   # Node.js Application
-  nodejs-app:
+  app:
     build:
       context: ../nodejs
       dockerfile: Dockerfile
@@ -63,9 +63,9 @@ services:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     depends_on:
-      - laravel-app
-      - fastapi-app
-      - nodejs-app
+      - blog
+      - api
+      - app
     networks:
       - app-network
 

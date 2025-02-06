@@ -1,0 +1,36 @@
+events {
+    worker_connections 1024;
+}
+
+http {
+    upstream webapp {
+        server webapp:3000;
+    }
+
+    server {
+        listen 80;
+        server_name webapp.yourdomain.com;
+
+        location /.well-known/acme-challenge/ {
+            root /var/www/certbot;
+        }
+
+        location / {
+            return 301 https://$host$request_uri;
+        }
+    }
+
+    server {
+        listen 443 ssl;
+        server_name webapp.yourdomain.com;
+
+        ssl_certificate /etc/letsencrypt/live/webapp.yourdomain.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/webapp.yourdomain.com/privkey.pem;
+
+        location / {
+            proxy_pass http://webapp;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+    }
+}
