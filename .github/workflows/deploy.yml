@@ -25,6 +25,11 @@ jobs:
       - name: Configure git to use merge
         run: git config --global pull.rebase false
 
+      - name: Change permissions for SSL directory
+        run: |
+          sudo chmod -R 777 ssl || true
+          sudo chown -R $(whoami) ssl || true
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
