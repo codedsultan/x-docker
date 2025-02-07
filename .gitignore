@@ -28,5 +28,5 @@ storage/media-library/temp
 !.yarn/sdks
 !.yarn/versions
 namecom.ini
-# /ssl
+/ssl
 /acme
