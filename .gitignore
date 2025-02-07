@@ -28,5 +28,6 @@ storage/media-library/temp
 !.yarn/sdks
 !.yarn/versions
 namecom.ini
-/ssl
+/ssl/xurl.fyi.fullchain.pem
+/ssl/xurl.fyi.key
 /acme
