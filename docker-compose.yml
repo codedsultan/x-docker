@@ -48,8 +48,8 @@ services:
       # - custom:/kutt/custom
       - /var/www/apps/nodejs/db_data_sqlite:/var/lib/kutt  # Store the SQLite database inside nodejs folder
       - /var/www/apps/nodejs/custom:/kutt/custom 
-    # env_file:
-    #   # - /var/www/apps/nodejs/.env
+    env_file:
+      - /var/www/apps/nodejs/.env
     # environment:
     #   DB_FILENAME: "/var/lib/kutt/data.sqlite"
     networks:
