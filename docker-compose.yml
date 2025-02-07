@@ -60,7 +60,7 @@ services:
     # build:
     #   context: ./nginx
     #   dockerfile: Dockerfile
-    image: ghcr.io/ngnix-acme-namecom/xurl:latest
+    image: ghcr.io/codedsultan/ngnix-acme-namecom/ngnix-acme-namecom:latest
     container_name: nginx
     restart: unless-stopped
     ports:
