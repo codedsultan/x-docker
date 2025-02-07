@@ -27,3 +27,5 @@ storage/media-library/temp
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+namecom.ini
+/ssl

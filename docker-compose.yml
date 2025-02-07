@@ -48,27 +48,35 @@ services:
       # - custom:/kutt/custom
       - /var/www/apps/nodejs/db_data_sqlite:/var/lib/kutt  # Store the SQLite database inside nodejs folder
       - /var/www/apps/nodejs/custom:/kutt/custom 
-    env_file:
-      - /var/www/apps/nodejs/.env
-    environment:
-      DB_FILENAME: "/var/lib/kutt/data.sqlite"
+    # env_file:
+    #   # - /var/www/apps/nodejs/.env
+    # environment:
+    #   DB_FILENAME: "/var/lib/kutt/data.sqlite"
     networks:
       - app-network
 
   # Nginx Service
   nginx:
-    image: nginx:alpine
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    # image: nginx:alpine
     container_name: nginx
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - "88:80"
+      - "8443:443"
     volumes:
       - ../laravel:/var/www/html
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+      - ./ssl:/etc/letsencrypt/live
+      # - ./certbot/conf:/etc/letsencrypt
+      # - ./certbot/www:/var/www/certbot
+      # - ./namecom.ini:/etc/letsencrypt/namecom/credentials.ini:ro
+    # command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    environment:
+      - NAMECOM_USERNAME=${NAMECOM_USERNAME}
+      - NAMECOM_TOKEN=${NAMECOM_TOKEN}
     depends_on:
       # - blog
       # - api
@@ -128,18 +136,18 @@ services:
   #   networks:
   #     - app-network
   #   restart: unless-stopped
-  certbot:
-    image: certbot/dns-namecom
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot  # Persist certificates
-      - ./namecom.ini:/etc/letsencrypt/namecom.ini
-    command: certonly \
-      --agree-tos --non-interactive \
-      --dns-namecom --dns-namecom-credentials /etc/letsencrypt/namecom.ini \
-      -d *.xurl.fyi -d xurl.fyi
-    environment:
-      - EMAIL=codedsultan@gmail.com
+  # certbot:
+  #   image: certbot/dns-namecom
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/www:/var/www/certbot  # Persist certificates
+  #     - ./namecom.ini:/etc/letsencrypt/namecom.ini
+  #   command: certonly \
+  #     --agree-tos --non-interactive \
+  #     --dns-namecom --dns-namecom-credentials /etc/letsencrypt/namecom.ini \
+  #     -d *.xurl.fyi -d xurl.fyi
+  #   environment:
+  #     - EMAIL=codedsultan@gmail.com
 
 networks:
   app-network:
