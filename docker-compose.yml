@@ -64,7 +64,7 @@ services:
     container_name: nginx
     restart: unless-stopped
     ports:
-      - "88:80"
+      - "80:80"
       - "8443:443"
     volumes:
       - ../laravel:/var/www/html
