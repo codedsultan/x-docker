@@ -1,0 +1,24 @@
+FROM nginx:alpine
+
+# Install required packages
+RUN apk add --no-cache \
+    curl \
+    openssl \
+    socat \
+    tzdata \
+    bash
+
+# Install acme.sh
+RUN curl https://get.acme.sh | sh -s codesultan369@gmail.com
+
+# Add acme.sh to PATH
+ENV PATH="/root/.acme.sh:$PATH"
+
+# Create directory for certificates
+RUN mkdir -p /etc/nginx/ssl
+
+# Add renewal script
+COPY renew-cert.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/renew-cert.sh
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
