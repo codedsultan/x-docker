@@ -5,10 +5,17 @@ set -e
 LOG_FILE="/var/log/cert-renewal.log"
 CERT_DIR="/etc/nginx/ssl"
 ACME_SH="/root/.acme.sh/acme.sh"  # Path to acme.sh
+SLACK_WEBHOOK_URL="${SLACK_MONITORING_WEB_HOOK}"  # Replace with your Slack webhook URL
 
 # Function to log messages
 log_message() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a $LOG_FILE
+}
+
+# Function to send Slack notification
+send_slack_notification() {
+    local message="$1"
+    curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$message\"}" "$SLACK_WEBHOOK_URL"
 }
 
 # Ensure log file and certificate directory exist
@@ -18,6 +25,7 @@ mkdir -p $CERT_DIR
 # Check if environment variables are set
 if [[ -z "$NAMECOM_USERNAME" || -z "$NAMECOM_TOKEN" ]]; then
     log_message "ERROR: Name.com credentials not found in environment variables"
+    send_slack_notification ":x: ERROR: Name.com credentials not found in environment variables"
     exit 1
 fi
 
@@ -26,11 +34,10 @@ export Namecom_Username="${NAMECOM_USERNAME}"
 export Namecom_Token="${NAMECOM_TOKEN}"
 
 log_message "Starting certificate issuance/renewal process"
-log_message "Certificates will be saved to: $CERT_DIR"
-log_message "Name.com username $NAMECOM_USERNAME"
+send_slack_notification ":hourglass: Starting SSL certificate issuance/renewal for xurl.fyi"
 
 # Issue/renew the certificate
-$ACME_SH --issue \
+if $ACME_SH --issue \
     --dns dns_namecom \
     -d xurl.fyi \
     -d "*.xurl.fyi" \
@@ -38,26 +45,24 @@ $ACME_SH --issue \
     --key-file "$CERT_DIR/xurl.fyi.key" \
     --fullchain-file "$CERT_DIR/xurl.fyi.fullchain.pem" \
     --reloadcmd "nginx -s reload" \
-    >> $LOG_FILE 2>&1 || exit 1
+    >> $LOG_FILE 2>&1; then
+    log_message "Certificate renewal completed successfully"
+    send_slack_notification ":white_check_mark: SSL certificate renewed successfully for xurl.fyi"
 
-log_message "Certificate renewal completed successfully"
+    # Show certificate expiry date
+    EXPIRY_DATE=$(openssl x509 -in "$CERT_DIR/xurl.fyi.fullchain.pem" -noout -enddate | cut -d= -f2)
+    send_slack_notification ":calendar: Certificate expires on: $EXPIRY_DATE"
 
-# List generated certificate files
-log_message "Generated certificate files:"
-ls -l $CERT_DIR | tee -a $LOG_FILE
-
-# Show certificate expiry date
-log_message "Certificate details:"
-openssl x509 -in "$CERT_DIR/xurl.fyi.fullchain.pem" -text -noout | grep "Not After" | tee -a $LOG_FILE
-
-# Reload Nginx with new certificates
-nginx -s reload || log_message "WARNING: Nginx reload failed!"
-
-echo "
-Certificate files are available at:
-- Inside container: $CERT_DIR
-- On your host machine: ./ssl/
-
-You can verify them with:
-docker-compose exec nginx ls -la $CERT_DIR
-"
+    # Reload Nginx with new certificates
+    if nginx -s reload; then
+        log_message "Nginx reloaded successfully"
+        send_slack_notification ":rocket: Nginx reloaded successfully with the new certificate"
+    else
+        log_message "WARNING: Nginx reload failed!"
+        send_slack_notification ":warning: Nginx reload failed!"
+    fi
+else
+    log_message "ERROR: Certificate renewal failed"
+    send_slack_notification ":x: ERROR: SSL certificate renewal failed for xurl.fyi. Check logs for details."
+    exit 1
+fi
