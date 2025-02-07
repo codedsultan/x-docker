@@ -57,10 +57,10 @@ services:
 
   # Nginx Service
   nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    # image: nginx:alpine
+    # build:
+    #   context: ./nginx
+    #   dockerfile: Dockerfile
+    image: ghcr.io/codedsultan/ngnix-acme-namecom/ngnix-acme-namecom:latest
     container_name: nginx
     restart: unless-stopped
     ports:
