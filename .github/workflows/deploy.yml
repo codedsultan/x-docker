@@ -25,10 +25,10 @@ jobs:
       - name: Configure git to use merge
         run: git config --global pull.rebase false
 
-      - name: Change permissions for SSL directory
-        run: |
-          sudo chmod -R 777 ${{ secrets.DEPLOY_PATH }}/ssl || true
-          sudo chown -R $(whoami) ${{ secrets.DEPLOY_PATH }}/ssl || true
+      # - name: Change permissions for SSL directory
+      #   run: |
+      #     sudo chmod -R 777 ${{ secrets.DEPLOY_PATH }}/ssl || true
+      #     sudo chown -R $(whoami) ${{ secrets.DEPLOY_PATH }}/ssl || true
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
@@ -48,7 +48,8 @@ jobs:
             set -e  # Exit on error
             cd "${{ secrets.DEPLOY_PATH }}"
             docker-compose stop app nginx && docker-compose rm -f app nginx
-            GIT_SSH_COMMAND='ssh -i /home/deploy/.ssh/nodejs_deploy_key' git pull origin main -f
+            # GIT_SSH_COMMAND='ssh -i /home/deploy/.ssh/nodejs_deploy_key' git pull origin main -f
+            git pull origin main -f
             echo ${{ secrets.PAT_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker-compose pull app nginx
             docker-compose up -d app nginx
