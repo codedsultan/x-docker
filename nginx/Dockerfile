@@ -7,7 +7,8 @@ RUN apk add --no-cache \
     socat \
     tzdata \
     bash \
-    dcron
+    dcron \
+    jq
 
 USER root
 # Install acme.sh
@@ -27,6 +28,7 @@ RUN mkdir -p /etc/nginx/ssl
 # Copy and set up the renewal script
 COPY renew-cert.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/renew-cert.sh
+RUN chmod -R 777 /usr/local/bin/renew-cert.sh
 
 # Add a cron job for certificate renewal (Runs daily at 3 AM)
 RUN echo "0 3 * * * /usr/local/bin/renew-cert.sh >> /var/log/cert-renewal.log 2>&1" > /etc/crontabs/root
