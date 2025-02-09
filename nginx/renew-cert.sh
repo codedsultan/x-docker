@@ -3,7 +3,7 @@ set -e
 
 # Path to log file
 LOG_FILE="/var/log/cert-renewal.log"
-CERT_DIR="/etc/nginx/ssl"
+CERT_DIR="/etc/letsencrypt/live"
 ACME_SH="/root/.acme.sh/acme.sh"  # Path to acme.sh
 SLACK_WEBHOOK_URL="${SLACK_MONITORING_WEB_HOOK}"  # Replace with your Slack webhook URL
 
@@ -37,6 +37,19 @@ export Namecom_Token="${NAMECOM_TOKEN}"
 log_message "Starting certificate issuance/renewal processes"
 send_slack_notification ":hourglass: Starting SSL certificate issuance/renewal for xurl.fyi"
 
+log_message "Removing old DNS challenge records..."
+send_slack_notification ":hourglass: Removing old DNS challenge records..."
+
+$ACME_SH --remove-dns-dv -d xurl.fyi
+$ACME_SH --remove-dns-dv -d "*.xurl.fyi"
+
+# Ensure removal before proceeding
+log_message "Checking for existing _acme-challenge TXT records..."
+send_slack_notification ":hourglass: Checking for existing _acme-challenge TXT records..."
+dig TXT _acme-challenge.xurl.fyi +short
+
+# Wait a few seconds to allow DNS propagation (adjust as needed)
+sleep 10
 # Issue/renew the certificate
 if $ACME_SH --issue \
     --dns dns_namecom \
