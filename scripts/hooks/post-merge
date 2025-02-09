@@ -2,8 +2,20 @@
 # echo "🔄 Fixing permissions for /var/www/apps..."
 # chown -R $USER:$USER /var/www/apps 
 # chmod -R 755 /var/www/apps
+#!/bin/bash
 
-SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"  # Replace with your Slack webhook URL
+# Navigate to the repository root (ensure correct path)
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+# Load environment variables
+if [ -f .env ]; then
+    set -a  # Export variables
+    source .env
+    set +a
+fi
+
+
+SLACK_WEBHOOK_URL="${SLACK_MONITORING_WEB_HOOK}"  # Replace with your Slack webhook URL
 
 send_slack_notification() {
     local message="$1"
