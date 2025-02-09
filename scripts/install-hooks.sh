@@ -35,12 +35,12 @@ mkdir -p .git/hooks
 mkdir -p .git/hooks
 
 # Install the post-merge hook if it doesn't exist
-if [ ! -f .git/hooks/post-merge ]; then
+# if [ ! -f .git/hooks/post-merge ]; then
     send_slack_notification "🔄 Installing post-merge hook..."
     cp scripts/hooks/post-merge .git/hooks/post-merge
     chmod +x .git/hooks/post-merge  # Make sure it's executable
     echo "✅ post-merge hook installed!"
     send_slack_notification "✅ post-merge hook installed!"
-fi
+# fi
 
 echo "✅ All hooks installed successfully!"
