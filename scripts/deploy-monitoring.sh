@@ -32,38 +32,53 @@ send_slack_notification "🔄 Setting up monitoring configuration for Nginx..."
 
 cat <<EOL | tee $NGINX_MONITORING_CONF > /dev/null
 
+# HTTP redirect to HTTPS
 server {
     listen 80;
     server_name monitoring.xurl.fyi;
-    return 301 https://$host$request_uri;
+    
+    # Redirect all HTTP traffic to HTTPS
+    return 301 https://\$host\$request_uri;
 }
 
+# HTTPS server block with SSL
 server {
     listen 443 ssl;
     server_name monitoring.xurl.fyi;
 
-    ssl_certificate /etc/letsencrypt/live/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/privkey.pem;
+    # SSL certificate and key paths
+    ssl_certificate /etc/letsencrypt/live/xurl.fyi/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/xurl.fyi/privkey.pem;
 
+    # SSL settings (adjust according to security best practices)
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    
+    # Resolver for Docker container name resolution
+    resolver 127.0.0.11 valid=30s;
+
+    # Prometheus location
     location /prometheus {
-        proxy_pass http://prometheus:9090/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://prometheus:9090;  # Adjust the container name if needed
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
     }
 
+    # Grafana location
     location /grafana {
-        proxy_pass http://grafana:3000/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://grafana:3000;  # Adjust the container name if needed
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
     }
 
+    # Loki location
     location /loki {
-        proxy_pass http://loki:3100/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://loki:3100;  # Adjust the container name if needed
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
     }
 }
 
