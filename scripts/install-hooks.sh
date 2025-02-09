@@ -98,7 +98,7 @@ send_slack_notification() {
 # Function to install hooks
 install_hooks() {
     echo "🔄 Installing Git Hooks..."
-    send_slack_notification "Installing Git Hooks..."
+    send_slack_notification "Installing Git Hooks...here"
 
     # Ensure the hooks directory exists
     mkdir -p .git/hooks
