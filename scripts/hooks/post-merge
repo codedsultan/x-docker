@@ -164,9 +164,19 @@ load_env_vars() {
         return 1
     fi
 }
+PROJECT_ROOT=/var/www/apps/docker
+# $(find_project_root)
 
+if [[ -z "$PROJECT_ROOT" ]]; then
+    echo "Error: Could not find project root containing .env file"
+    exit 1
+fi
+
+# Load the environment variables
+load_env_vars "$PROJECT_ROOT/scripts/.env"
 # Function to send Slack notifications
 send_slack_notification() {
+    
     local message="$1"
     curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${message}\"}" "$SLACK_WEBHOOK_URL"
 }
@@ -230,22 +240,22 @@ fix_permissions() {
 # Main execution
 main() {
     # Find the project root
-    PROJECT_ROOT=/var/www/apps/docker
-    # $(find_project_root)
+    # PROJECT_ROOT=/var/www/apps/docker
+    # # $(find_project_root)
     
-    if [[ -z "$PROJECT_ROOT" ]]; then
-        echo "Error: Could not find project root containing .env file"
-        exit 1
-    fi
+    # if [[ -z "$PROJECT_ROOT" ]]; then
+    #     echo "Error: Could not find project root containing .env file"
+    #     exit 1
+    # fi
     
-    # Load the environment variables
-    load_env_vars "$PROJECT_ROOT/.env"
-    local env_load_status=$?
+    # # Load the environment variables
+    # load_env_vars "$PROJECT_ROOT/scripts/.env"
+    # local env_load_status=$?
     
-    if [[ $env_load_status -ne 0 ]]; then
-        echo "Failed to load environment variables"
-        exit 1
-    fi
+    # if [[ $env_load_status -ne 0 ]]; then
+    #     echo "Failed to load environment variables"
+    #     exit 1
+    # fi
     
     # Update firewall settings
     update_firewall

@@ -78,10 +78,10 @@ find_project_root() {
 # if [ -f .env ]; then
 PROJECT_ROOT=/var/www/apps/docker
 
-    echo "Loading environment variables from .env"
-    set -a
-    source "$PROJECT_ROOT/.env"
-    set +a
+echo "Loading environment variables from .env"
+set -a
+source "$PROJECT_ROOT/scripts/.env"
+set +a
 # else
 #     echo "Error: .env file not found at project root"
 #     exit 1
