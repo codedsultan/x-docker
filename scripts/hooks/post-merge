@@ -191,9 +191,14 @@ update_firewall() {
     sudo ufw allow 3100/tcp  # Loki
     sudo ufw allow 9080/tcp  # Promtail
     
-    sudo ufw enable
-    sudo ufw reload
-    
+     # Enable UFW with automatic yes to prompt
+    # echo "y" | sudo /usr/sbin/ufw enable
+    # or alternatively:
+    sudo ufw --force enable
+    sudo ufw --force reload
+
+    # echo "y" | sudo /usr/sbin/ufw enable
+
     echo "✅ Firewall updated!"
     send_slack_notification "✅ Firewall settings updated!"
 }
