@@ -33,3 +33,5 @@ namecom.ini
 /acme
 /nginx/conf.d/monitoring.conf
 /monitoring/grafana
+/scripts/hooks
+/scripts/install-hooks.sh
