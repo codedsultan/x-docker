@@ -1,10 +1,14 @@
 #!/bin/sh
 set -a
 # Load the environment variables from the .env file at the root of the project
-source ../.env
+source ./.env
 # Disable exporting environment variables after loading
 set +a
+mkdir -p ./log
 
+if [ ! -f ./log/deploy-monitoring.log ]; then
+    touch ./log/deploy-monitoring.log
+fi
 SLACK_WEBHOOK_URL="${SLACK_MONITORING_WEB_HOOK}"  # Replace with your Slack webhook URL
 LOG_FILE="./log/deploy-monitoring.log"
 NGINX_MONITORING_CONF="./nginx/conf.d/monitoring.conf"
