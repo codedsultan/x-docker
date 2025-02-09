@@ -31,3 +31,4 @@ namecom.ini
 # /ssl/xurl.fyi.fullchain.pem
 # /ssl/xurl.fyi.key
 /acme
+/nginx/conf.d/monitoring.conf

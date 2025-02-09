@@ -1,5 +1,4 @@
-version: '3.8'
-
+# version: '3.8'
 services:
   # Laravel Application
   blog:
@@ -20,11 +19,6 @@ services:
       - redis
     networks:
       - app-network
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-        max-file: "3"
 
   # FastAPI Application
   api:
@@ -39,33 +33,33 @@ services:
       - ENVIRONMENT=production
     networks:
       - app-network
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-        max-file: "3"
 
   # Node.js Application
   app:
+    # build:
+    #   context: ../nodejs
+    #   dockerfile: Dockerfile
     image: ghcr.io/codedsultan/xurl:latest
     container_name: nodejs-app
     restart: unless-stopped
     volumes:
       - /var/www/apps/nodejs:/app
-      - /var/www/apps/nodejs/db_data_sqlite:/var/lib/kutt
+      # - app_db_data_sqlite:/var/lib/kutt
+      # - custom:/kutt/custom
+      - /var/www/apps/nodejs/db_data_sqlite:/var/lib/kutt  # Store the SQLite database inside nodejs folder
       - /var/www/apps/nodejs/custom:/kutt/custom 
     env_file:
       - /var/www/apps/nodejs/.env
+    # environment:
+    #   DB_FILENAME: "/var/lib/kutt/data.sqlite"
     networks:
       - app-network
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-        max-file: "3"
 
   # Nginx Service
   nginx:
+    # build:
+    #   context: ./nginx
+    #   dockerfile: Dockerfile
     image: ghcr.io/codedsultan/ngnix-acme-namecom/ngnix-acme-namecom:latest
     container_name: nginx
     restart: unless-stopped
@@ -76,15 +70,20 @@ services:
       - ../laravel:/var/www/html
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./ssl:/etc/letsencrypt/live
+      # - ./certbot/conf:/etc/letsencrypt
+      # - ./certbot/www:/var/www/certbot
+      # - ./namecom.ini:/etc/letsencrypt/namecom/credentials.ini:ro
+    # command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    environment:
+      - NAMECOM_USERNAME=${NAMECOM_USERNAME}
+      - NAMECOM_TOKEN=${NAMECOM_TOKEN}
+      - SLACK_MONITORING_WEB_HOOK=${SLACK_MONITORING_WEB_HOOK}
     depends_on:
+      # - blog
+      # - api
       - app
     networks:
       - app-network
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-        max-file: "3"
 
   # MySQL Service
   mysql:
@@ -101,11 +100,6 @@ services:
       - ./mysql/conf.d:/etc/mysql/conf.d
     networks:
       - app-network
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-        max-file: "3"
 
   # Redis Service
   redis:
@@ -116,11 +110,6 @@ services:
       - ./redis/data:/data
     networks:
       - app-network
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-        max-file: "3"
 
   # Laravel Queue Worker
   laravel-queue:
@@ -137,73 +126,38 @@ services:
       - ../laravel:/var/www/html
     networks:
       - app-network
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-        max-file: "3"
 
-  # Prometheus (Monitoring)
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    restart: unless-stopped
-    volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-    networks:
-      - app-network
-    ports:
-      - "9090:9090"
-
-  # Grafana (Monitoring UI)
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    restart: unless-stopped
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
-    volumes:
-      - ./monitoring/grafana:/var/lib/grafana
-    networks:
-      - app-network
-    ports:
-      - "3000:3000"
-
-  # Loki (Logging)
-  loki:
-    image: grafana/loki:latest
-    container_name: loki
-    restart: unless-stopped
-    volumes:
-      - ./monitoring/loki-config.yml:/etc/loki/config.yml
-    networks:
-      - app-network
-    ports:
-      - "3100:3100"
-
-  # Promtail (Log Collector)
-  promtail:
-    image: grafana/promtail:latest
-    container_name: promtail
-    restart: unless-stopped
-    volumes:
-      - /var/log:/var/log
-      - ./monitoring/promtail-config.yml:/etc/promtail/config.yml
-    networks:
-      - app-network
-
-  # Alertmanager (For Notifications)
-  alertmanager:
-    image: prom/alertmanager:latest
-    container_name: alertmanager
-    restart: unless-stopped
-    volumes:
-      - ./monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-    networks:
-      - app-network
-    ports:
-      - "9093:9093"
+  # certbot:
+  #   image: certbot/certbot
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/www:/var/www/certbot
+  #   # Remove the certonly command to run interactively
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
+  # certbot:
+  #   image: certbot/dns-namecom
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/www:/var/www/certbot  # Persist certificates
+  #     - ./namecom.ini:/etc/letsencrypt/namecom.ini
+  #   command: certonly \
+  #     --agree-tos --non-interactive \
+  #     --dns-namecom --dns-namecom-credentials /etc/letsencrypt/namecom.ini \
+  #     -d *.xurl.fyi -d xurl.fyi
+  #   environment:
+  #     - EMAIL=codedsultan@gmail.com
 
 networks:
   app-network:
     driver: bridge
+
+# volumes:
+#   mysql_data:
+#   redis_data:
+#   certbot_conf:
+#   certbot_www:
+  # app_db_data_sqlite:
+  # custom:

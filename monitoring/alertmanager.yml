@@ -1,0 +1,14 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: 'slack-alerts'
+
+receivers:
+  - name: 'slack-alerts'
+    slack_configs:
+      - send_resolved: true
+        api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+        channel: '#alerts'
+        title: 'Docker Alert'
+        text: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
