@@ -80,6 +80,10 @@ services:
       - app
     networks:
       - app-network
+    environment:
+      - NAMECOM_USERNAME=${NAMECOM_USERNAME}
+      - NAMECOM_TOKEN=${NAMECOM_TOKEN}
+      - SLACK_MONITORING_WEB_HOOK=${SLACK_MONITORING_WEB_HOOK}
     logging:
       driver: "json-file"
       options:
