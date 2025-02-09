@@ -45,7 +45,7 @@ sudo chown -R $USER:$USER /var/lib/grafana
 sudo chown -R 472:472 /var/www/apps/docker/monitoring/loki
 sudo chown -R 472:472 /var/www/apps/docker/monitoring/grafana
 sudo chown -R 65534:65534 /var/www/apps/docker/monitoring/promtail
-sudo chown -R 65534:65534/var/www/apps/docker/monitoring/prometheus
+sudo chown -R 65534:65534 /var/www/apps/docker/monitoring/prometheus
 
 
 # Open firewall ports for monitoring tools
