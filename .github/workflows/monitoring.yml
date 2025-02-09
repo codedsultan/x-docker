@@ -47,6 +47,6 @@ jobs:
             echo "${{ secrets.PAT_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
             docker-compose pull -q prometheus grafana loki promtail alertmanager
             docker-compose up -d --remove-orphans prometheus grafana loki promtail alertmanager
-            ./deploy-monitoring.sh
+            .//scripts/deploy-monitoring.sh
           ENDSSH
 
