@@ -24,7 +24,7 @@ send_slack_notification "🔄 Setting up monitoring configuration for Nginx..."
 cat <<EOL | tee $NGINX_MONITORING_CONF > /dev/null
 server {
     listen 80;
-    server_name monitoring.example.com;
+    server_name monitoring.xurl.fyi;
 
     location / {
         proxy_pass http://localhost:3000;  # Grafana
