@@ -109,7 +109,6 @@
 # sudo chown -R 65534:65534 /var/www/apps/docker/monitoring/promtail
 # sudo chown -R 65534:65534 /var/www/apps/docker/monitoring/prometheus
 
-
 # # Open firewall ports for monitoring tools
 # sudo ufw allow 9090/tcp  # Prometheus
 # sudo ufw allow 3000/tcp  # Grafana
@@ -121,11 +120,8 @@
 # echo "✅ Permissions updated!"
 # send_slack_notification "✅ Permissions updated!"
 # # Ensure hooks are installed
-
 # chmod +x scripts/install-hooks.sh 
 # chmod +x scripts/deploy-monitoring.sh 
-
-
 # # Ensure the script is owned by the user running the hook
 # chown $USER:$USER scripts/install-hooks.sh
 # chmod $USER:$USER scripts/deploy-monitorings.sh 
