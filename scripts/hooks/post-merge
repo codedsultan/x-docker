@@ -1,75 +1,267 @@
-#!/bin/sh
-# echo "🔄 Fixing permissions for /var/www/apps..."
-# chown -R $USER:$USER /var/www/apps 
-# chmod -R 755 /var/www/apps
+# #!/bin/sh
+# # echo "🔄 Fixing permissions for /var/www/apps..."
+# # chown -R $USER:$USER /var/www/apps 
+# # chmod -R 755 /var/www/apps
+# #!/bin/bash
+
+# # Navigate to the repository root (ensure correct path)
+# # cd "$(git rev-parse --show-toplevel)" || exit 1
+
+# # # Load environment variables
+# # if [ -f .env ]; then
+# #     set -a  # Export variables
+# #     source .env
+# #     set +a
+# # fi
+
+# # #!/bin/bash
+
+# # # Store the original directory
+# # ORIGINAL_DIR=$(pwd)
+
+# # Function to find the project root (where .env file is located)
+# find_project_root() {
+#     local current_dir="$PWD"
+#     while [[ "$current_dir" != "/" ]]; do
+#         if [[ -f "$current_dir/.env" ]]; then
+#             echo "$current_dir"
+#             return 0
+#         fi
+#         current_dir="$(dirname "$current_dir")"
+#     done
+#     return 1
+# }
+
+# # Function to load environment variables
+# load_env_vars() {
+#     local env_file="$1"
+#     if [[ -f "$env_file" ]]; then
+#         echo "Loading environment variables from $env_file"
+#         set -a
+#         source "$env_file"
+#         set +a
+#         return 0
+#     else
+#         echo "Error: .env file not found at $env_file"
+#         return 1
+#     fi
+# }
+
+# # Main execution
+# main() {
+#     # Find the project root
+#     PROJECT_ROOT=$(find_project_root)
+    
+#     if [[ -z "$PROJECT_ROOT" ]]; then
+#         echo "Error: Could not find project root containing .env file"
+#         exit 1
+#     fi
+    
+#     # Load the environment variables
+#     load_env_vars "$PROJECT_ROOT/.env"
+#     local env_load_status=$?
+    
+#     if [[ $env_load_status -ne 0 ]]; then
+#         echo "Failed to load environment variables"
+#         exit 1
+#     fi
+    
+#     # Your post-merge operations can go here
+#     echo "Environment variables loaded successfully"
+#     # Example: you can now use environment variables
+#     # echo "Example env var: $EXAMPLE_VAR"
+    
+#     # Return to original directory
+#     cd "$ORIGINAL_DIR"
+# }
+
+# # Execute main function
+# main
+# SLACK_WEBHOOK_URL="${SLACK_MONITORING_WEB_HOOK}"  # Replace with your Slack webhook URL
+
+# send_slack_notification() {
+#     local message="$1"
+#     # log_message "Sending Slack notification: $message"
+#     curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${message}\"}" "$SLACK_WEBHOOK_URL"
+# }
+
+
+# echo "🔄 Fixing permissions and firewall settings..."
+# send_slack_notification "Fixing permissions and firewall settings..."
+
+# sudo ufw allow OpenSSH
+# sudo ufw allow 80/tcp
+# sudo ufw allow 443/tcp
+# sudo ufw enable
+# sudo ufw reload
+# # Fix permissions
+# sudo chmod -R 755 /var/log
+# sudo chown -R $USER:$USER /var/log
+
+# sudo chmod -R 755 /var/lib/grafana
+# # sudo chown -R $USER:$USER /var/lib/grafana
+# # sudo chown -R 472:472 /var/www/apps/monitoring/loki
+# # sudo chown -R 65534:65534 /var/www/apps/monitoring/promtail
+# # sudo chown -R 65534:65534/var/www/apps/monitoring/prometheus
+
+# sudo chown -R 472:472 /var/www/apps/docker/monitoring/loki
+# sudo chown -R 472:472 /var/www/apps/docker/monitoring/grafana
+# sudo chown -R 65534:65534 /var/www/apps/docker/monitoring/promtail
+# sudo chown -R 65534:65534 /var/www/apps/docker/monitoring/prometheus
+
+
+# # Open firewall ports for monitoring tools
+# sudo ufw allow 9090/tcp  # Prometheus
+# sudo ufw allow 3000/tcp  # Grafana
+# sudo ufw allow 3100/tcp  # Loki
+# sudo ufw allow 9080/tcp  # Promtail
+
+# echo "✅ Permissions and firewall updated!"
+
+# echo "✅ Permissions updated!"
+# send_slack_notification "✅ Permissions updated!"
+# # Ensure hooks are installed
+
+# chmod +x scripts/install-hooks.sh 
+# chmod +x scripts/deploy-monitoring.sh 
+
+
+# # Ensure the script is owned by the user running the hook
+# chown $USER:$USER scripts/install-hooks.sh
+# chmod $USER:$USER scripts/deploy-monitorings.sh 
+
+# # Run the install-hooks.sh script
+# send_slack_notification " Running install-hooks.sh script..."
+
+# ./scripts/install-hooks.sh
+
 #!/bin/bash
 
-# Navigate to the repository root (ensure correct path)
-cd "$(git rev-parse --show-toplevel)" || exit 1
+# Store the original directory
+ORIGINAL_DIR=$(pwd)
 
-# Load environment variables
-if [ -f .env ]; then
-    set -a  # Export variables
-    source .env
-    set +a
-fi
+# Function to find the project root (where .env file is located)
+find_project_root() {
+    local current_dir="$PWD"
+    while [[ "$current_dir" != "/" ]]; do
+        if [[ -f "$current_dir/.env" ]]; then
+            echo "$current_dir"
+            return 0
+        fi
+        current_dir="$(dirname "$current_dir")"
+    done
+    return 1
+}
 
+# Function to load environment variables
+load_env_vars() {
+    local env_file="$1"
+    if [[ -f "$env_file" ]]; then
+        echo "Loading environment variables from $env_file"
+        set -a
+        source "$env_file"
+        set +a
+        SLACK_WEBHOOK_URL="${SLACK_MONITORING_WEB_HOOK}"  # Set Slack webhook URL from env
+        return 0
+    else
+        echo "Error: .env file not found at $env_file"
+        return 1
+    fi
+}
 
-SLACK_WEBHOOK_URL="${SLACK_MONITORING_WEB_HOOK}"  # Replace with your Slack webhook URL
-
+# Function to send Slack notifications
 send_slack_notification() {
     local message="$1"
-    # log_message "Sending Slack notification: $message"
     curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${message}\"}" "$SLACK_WEBHOOK_URL"
 }
 
+# Function to update firewall settings
+update_firewall() {
+    echo "🔄 Updating firewall settings..."
+    send_slack_notification "Updating firewall settings..."
+    
+    # Basic web and SSH access
+    sudo ufw allow OpenSSH
+    sudo ufw allow 80/tcp
+    sudo ufw allow 443/tcp
+    
+    # Monitoring stack ports
+    sudo ufw allow 9090/tcp  # Prometheus
+    sudo ufw allow 3000/tcp  # Grafana
+    sudo ufw allow 3100/tcp  # Loki
+    sudo ufw allow 9080/tcp  # Promtail
+    
+    sudo ufw enable
+    sudo ufw reload
+    
+    echo "✅ Firewall updated!"
+    send_slack_notification "✅ Firewall settings updated!"
+}
 
-echo "🔄 Fixing permissions and firewall settings..."
-send_slack_notification "Fixing permissions and firewall settings..."
+# Function to fix permissions
+fix_permissions() {
+    echo "🔄 Fixing permissions..."
+    send_slack_notification "Fixing permissions..."
+    
+    # System logs
+    sudo chmod -R 755 /var/log
+    sudo chown -R $USER:$USER /var/log
+    
+    # Grafana
+    sudo chmod -R 755 /var/lib/grafana
+    
+    # Monitoring stack permissions
+    sudo chown -R 472:472 /var/www/apps/docker/monitoring/loki
+    sudo chown -R 472:472 /var/www/apps/docker/monitoring/grafana
+    sudo chown -R 65534:65534 /var/www/apps/docker/monitoring/promtail
+    sudo chown -R 65534:65534 /var/www/apps/docker/monitoring/prometheus
+    
+    # Script permissions
+    chmod +x scripts/install-hooks.sh
+    chmod +x scripts/deploy-monitoring.sh
+    chown $USER:$USER scripts/install-hooks.sh
+    chown $USER:$USER scripts/deploy-monitoring.sh
+    
+    echo "✅ Permissions updated!"
+    send_slack_notification "✅ Permissions updated!"
+}
 
-sudo ufw allow OpenSSH
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw enable
-sudo ufw reload
-# Fix permissions
-sudo chmod -R 755 /var/log
-sudo chown -R $USER:$USER /var/log
+# Main execution
+main() {
+    # Find the project root
+    PROJECT_ROOT=$(find_project_root)
+    
+    if [[ -z "$PROJECT_ROOT" ]]; then
+        echo "Error: Could not find project root containing .env file"
+        exit 1
+    fi
+    
+    # Load the environment variables
+    load_env_vars "$PROJECT_ROOT/.env"
+    local env_load_status=$?
+    
+    if [[ $env_load_status -ne 0 ]]; then
+        echo "Failed to load environment variables"
+        exit 1
+    fi
+    
+    # Update firewall settings
+    update_firewall
+    
+    # Fix permissions
+    fix_permissions
+    
+    # Run install hooks script
+    cd "$PROJECT_ROOT"
+    send_slack_notification "Running install-hooks.sh script..."
+    ./scripts/install-hooks.sh
+    
+    # Return to original directory
+    cd "$ORIGINAL_DIR"
+    
+    echo "✅ Post-merge tasks completed successfully!"
+    send_slack_notification "✅ Post-merge tasks completed successfully!"
+}
 
-sudo chmod -R 755 /var/lib/grafana
-# sudo chown -R $USER:$USER /var/lib/grafana
-# sudo chown -R 472:472 /var/www/apps/monitoring/loki
-# sudo chown -R 65534:65534 /var/www/apps/monitoring/promtail
-# sudo chown -R 65534:65534/var/www/apps/monitoring/prometheus
-
-sudo chown -R 472:472 /var/www/apps/docker/monitoring/loki
-sudo chown -R 472:472 /var/www/apps/docker/monitoring/grafana
-sudo chown -R 65534:65534 /var/www/apps/docker/monitoring/promtail
-sudo chown -R 65534:65534 /var/www/apps/docker/monitoring/prometheus
-
-
-# Open firewall ports for monitoring tools
-sudo ufw allow 9090/tcp  # Prometheus
-sudo ufw allow 3000/tcp  # Grafana
-sudo ufw allow 3100/tcp  # Loki
-sudo ufw allow 9080/tcp  # Promtail
-
-echo "✅ Permissions and firewall updated!"
-
-echo "✅ Permissions updated!"
-send_slack_notification "✅ Permissions updated!"
-# Ensure hooks are installed
-
-chmod +x scripts/install-hooks.sh 
-chmod +x scripts/deploy-monitoring.sh 
-
-
-# Ensure the script is owned by the user running the hook
-chown $USER:$USER scripts/install-hooks.sh
-chmod $USER:$USER scripts/deploy-monitorings.sh 
-
-# Run the install-hooks.sh script
-send_slack_notification " Running install-hooks.sh script..."
-
-./scripts/install-hooks.sh
-
+# Execute main function
+main
