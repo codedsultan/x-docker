@@ -260,7 +260,7 @@ main() {
     # Run install hooks script
     cd "$PROJECT_ROOT"
     send_slack_notification "Running install-hooks.sh script..."
-    ./scripts/install-hooks.sh
+    /var/www/apps/docker/scripts/install-hooks.sh
     
     # Return to original directory
     cd "$ORIGINAL_DIR"
