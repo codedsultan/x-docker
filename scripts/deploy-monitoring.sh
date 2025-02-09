@@ -23,7 +23,7 @@ send_slack_notification() {
     curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${message}\"}" "$SLACK_WEBHOOK_URL"
 }
 
-log_message "Setting up monitoring configuration for Nginx..."
+log_message "Setting up monitoring configuration for Nginx...updating done"
 send_slack_notification "🔄 Setting up monitoring configuration for Nginx..."
 
 
