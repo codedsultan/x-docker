@@ -8,12 +8,12 @@ SLACK_WEBHOOK_URL="${SLACK_MONITORING_WEB_HOOK}"  # Replace with your Slack webh
 
 send_slack_notification() {
     local message="$1"
-    log_message "Sending Slack notification: $message"
+    echo "Sending Slack notification: $message to $SLACK_WEBHOOK_URL"
     curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${message}\"}" "$SLACK_WEBHOOK_URL"
 }
 
 echo "🔄 Installing Git Hooks..."
-send_slack_notification "🔄 Installing Git Hooks..."
+send_slack_notification "Installing Git Hooks..."
 
 # Ensure the hooks directory exists
 mkdir -p .git/hooks
