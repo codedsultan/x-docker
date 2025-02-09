@@ -42,8 +42,7 @@ jobs:
             cd "${{ secrets.DEPLOY_PATH }}"
             # docker-compose down --remove-orphans
             docker-compose stop prometheus grafana loki promtail alertmanager && docker-compose rm -f prometheus grafana loki promtail alertmanager
-            git fetch origin
-            git reset --hard origin/main
+            git pull origin monitoring -f
             echo "${{ secrets.PAT_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
             docker-compose pull -q prometheus grafana loki promtail alertmanager
             docker-compose up -d --remove-orphans prometheus grafana loki promtail alertmanager
