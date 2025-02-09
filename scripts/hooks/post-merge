@@ -44,13 +44,13 @@ echo "✅ Permissions updated!"
 send_slack_notification "✅ Permissions updated!"
 # Ensure hooks are installed
 
-chmod +x ../scripts/install-hooks.sh 
-chmod +x ../scripts/deploy-monitoring.sh 
+chmod +x scripts/install-hooks.sh 
+chmod +x scripts/deploy-monitoring.sh 
 
 
 # Ensure the script is owned by the user running the hook
-chown $USER:$USER ../scripts/install-hooks.sh
-chmod $USER:$USER  ../scripts/deploy-monitorings.sh 
+chown $USER:$USER scripts/install-hooks.sh
+chmod $USER:$USER scripts/deploy-monitorings.sh 
 
 # Run the install-hooks.sh script
 send_slack_notification " Running install-hooks.sh script..."
