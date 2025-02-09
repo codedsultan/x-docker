@@ -23,9 +23,14 @@ sudo ufw reload
 # Fix permissions
 sudo chmod -R 755 /var/log
 sudo chown -R $USER:$USER /var/log
-sudo chown -R 472:472 /var/www/apps/monitoring/loki
-sudo chown -R 65534:65534 /var/www/apps/monitoring/promtail
-sudo chown -R 65534:65534/var/www/apps/monitoring/prometheus
+# sudo chown -R 472:472 /var/www/apps/monitoring/loki
+# sudo chown -R 65534:65534 /var/www/apps/monitoring/promtail
+# sudo chown -R 65534:65534/var/www/apps/monitoring/prometheus
+
+sudo chown -R 472:472 /var/www/apps/docker/monitoring/loki
+sudo chown -R 65534:65534 /var/www/apps/docker/monitoring/promtail
+sudo chown -R 65534:65534/var/www/apps/docker/monitoring/prometheus
+
 
 # Open firewall ports for monitoring tools
 sudo ufw allow 9090/tcp  # Prometheus
