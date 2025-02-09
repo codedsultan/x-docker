@@ -1,7 +1,8 @@
 #!/bin/sh
+# /scripts/install-hooks.sh
 set -a
 # Load the environment variables from the .env file at the root of the project
-source ../.env
+source ./.env
 # Disable exporting environment variables after loading
 set +a
 SLACK_WEBHOOK_URL="${SLACK_MONITORING_WEB_HOOK}"  # Replace with your Slack webhook URL
