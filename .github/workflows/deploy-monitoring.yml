@@ -1,8 +1,7 @@
-name: Deploy Nginx
-
+name: Deploy Monitoring
 on:
   push:
-    branches: [ main ]
+    branches: [ monitoring ]
 
 jobs:
 
@@ -25,10 +24,10 @@ jobs:
       - name: Configure git to use merge
         run: git config --global pull.rebase false
 
-      - name: Change permissions for SSL directory
-        run: |
-          sudo chmod -R 777 ${{ secrets.DEPLOY_PATH }}/ssl || true
-          sudo chown -R $(whoami) ${{ secrets.DEPLOY_PATH }}/ssl || true
+      # - name: Change permissions for SSL directory
+      #   run: |
+      #     sudo chmod -R 777 ${{ secrets.DEPLOY_PATH }}/ssl || true
+      #     sudo chown -R $(whoami) ${{ secrets.DEPLOY_PATH }}/ssl || true
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
@@ -37,20 +36,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.PAT_TOKEN }}
           
-      - name: Deploy Nginx
+      - name: Deploy Monitoring Services
         env:
           SERVER_IP: ${{ secrets.SERVER_IP }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}" << 'ENDSSH'
-            set -euxo pipefail
+            set -euxo pipefail  # Exit on error, unset vars, pipeline failures
             cd "${{ secrets.DEPLOY_PATH }}"
-            docker-compose stop app nginx && docker-compose rm -f app nginx
+            # docker-compose down --remove-orphans
+            docker-compose stop prometheus grafana loki promtail alertmanager && docker-compose rm -f prometheus grafana loki promtail alertmanager
             git fetch origin
             git reset --hard origin/main
             echo "${{ secrets.PAT_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-            docker-compose pull -q app nginx
-            docker-compose up -d --remove-orphans app nginx
+            docker-compose pull -q prometheus grafana loki promtail alertmanager
+            docker-compose up -d --remove-orphans prometheus grafana loki promtail alertmanager
+            ./deploy-monitoring.sh
           ENDSSH
-          
+
