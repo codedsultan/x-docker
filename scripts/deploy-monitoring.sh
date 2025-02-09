@@ -31,31 +31,42 @@ send_slack_notification "🔄 Setting up monitoring configuration for Nginx..."
 
 
 cat <<EOL | tee $NGINX_MONITORING_CONF > /dev/null
+
 server {
     listen 80;
     server_name monitoring.xurl.fyi;
+    return 301 https://$host$request_uri;
+}
 
-    location / {
-        proxy_pass http://localhost:3000;  # Grafana
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+server {
+    listen 443 ssl;
+    server_name monitoring.xurl.fyi;
+
+    ssl_certificate /etc/letsencrypt/live/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/privkey.pem;
+
+    location /prometheus {
+        proxy_pass http://prometheus:9090/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 
-    location /prometheus/ {
-        proxy_pass http://localhost:9090;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    location /grafana {
+        proxy_pass http://grafana:3000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 
-    location /loki/ {
-        proxy_pass http://localhost:3100;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    location /loki {
+        proxy_pass http://loki:3100/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
+
 EOL
 
 # Restart the Nginx container
