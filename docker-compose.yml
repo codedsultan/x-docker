@@ -164,6 +164,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     restart: unless-stopped
+    user: "472:472"  
     env_file:
       - .env
     environment:
