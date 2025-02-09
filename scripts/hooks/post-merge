@@ -206,7 +206,7 @@ update_firewall() {
 # Function to fix permissions
 fix_permissions() {
     echo "🔄 Fixing permissions..."
-    send_slack_notification "Fixing permissions..."
+    send_slack_notification "Fixing permissions...started"
     
     # System logs
     sudo chmod -R 755 /var/log
