@@ -62,28 +62,30 @@ find_project_root() {
 }
 
 # Store the original directory
-ORIGINAL_DIR=$(pwd)
+# ORIGINAL_DIR=$(pwd)
 
 # Find project root
-PROJECT_ROOT=$(find_project_root)
-if [[ -z "$PROJECT_ROOT" ]]; then
-    echo "Error: Could not find project root containing .env file"
-    exit 1
-fi
+# PROJECT_ROOT=$(find_project_root)
+# if [[ -z "$PROJECT_ROOT" ]]; then
+#     echo "Error: Could not find project root containing .env file"
+#     exit 1
+# fi
 
-# Change to project root to ensure relative paths work correctly
-cd "$PROJECT_ROOT"
+# # Change to project root to ensure relative paths work correctly
+# cd "$PROJECT_ROOT"
 
 # Load environment variables
-if [ -f .env ]; then
+# if [ -f .env ]; then
+PROJECT_ROOT=/var/www/apps/docker
+
     echo "Loading environment variables from .env"
     set -a
-    source .env
+    source "$PROJECT_ROOT/.env"
     set +a
-else
-    echo "Error: .env file not found at project root"
-    exit 1
-fi
+# else
+#     echo "Error: .env file not found at project root"
+#     exit 1
+# fi
 
 SLACK_WEBHOOK_URL="${SLACK_MONITORING_WEB_HOOK}"
 
