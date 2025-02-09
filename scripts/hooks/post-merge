@@ -1,0 +1,53 @@
+#!/bin/sh
+# echo "🔄 Fixing permissions for /var/www/apps..."
+# chown -R $USER:$USER /var/www/apps 
+# chmod -R 755 /var/www/apps
+
+SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"  # Replace with your Slack webhook URL
+
+send_slack_notification() {
+    local message="$1"
+    log_message "Sending Slack notification: $message"
+    curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${message}\"}" "$SLACK_WEBHOOK_URL"
+}
+
+
+echo "🔄 Fixing permissions and firewall settings..."
+send_slack_notification "🔄 Fixing permissions and firewall settings..."
+
+sudo ufw allow OpenSSH
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable
+sudo ufw reload
+# Fix permissions
+sudo chmod -R 755 /var/log
+sudo chown -R $USER:$USER /var/log
+sudo chown -R 472:472 /var/www/apps/monitoring/loki
+sudo chown -R 65534:65534 /var/www/apps/monitoring/promtail
+sudo chown -R 65534:65534/var/www/apps/monitoring/prometheus
+
+# Open firewall ports for monitoring tools
+sudo ufw allow 9090/tcp  # Prometheus
+sudo ufw allow 3000/tcp  # Grafana
+sudo ufw allow 3100/tcp  # Loki
+sudo ufw allow 9080/tcp  # Promtail
+
+echo "✅ Permissions and firewall updated!"
+
+echo "✅ Permissions updated!"
+send_slack_notification "✅ Permissions updated!"
+# Ensure hooks are installed
+
+chmod +x ../scripts/install-hooks.sh 
+chmod +x ../scripts/deploy-monitoring.sh 
+
+
+# Ensure the script is owned by the user running the hook
+chown $USER:$USER ../scripts/install-hooks.sh
+chmod $USER:$USER  ../scripts/deploy-monitorings.sh 
+
+# Run the install-hooks.sh script
+send_slack_notification "🔄 Running install-hooks.sh script..."
+../scripts/install-hooks.sh
+
