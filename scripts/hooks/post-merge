@@ -7,13 +7,13 @@ SLACK_WEBHOOK_URL="https://hooks.slack.com/services/T03TBNVQF6Z/B08C3MPTXS9/B1Yi
 
 send_slack_notification() {
     local message="$1"
-    log_message "Sending Slack notification: $message"
+    # log_message "Sending Slack notification: $message"
     curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${message}\"}" "$SLACK_WEBHOOK_URL"
 }
 
 
 echo "🔄 Fixing permissions and firewall settings..."
-send_slack_notification "🔄 Fixing permissions and firewall settings..."
+send_slack_notification "Fixing permissions and firewall settings..."
 
 sudo ufw allow OpenSSH
 sudo ufw allow 80/tcp
@@ -53,6 +53,7 @@ chown $USER:$USER ../scripts/install-hooks.sh
 chmod $USER:$USER  ../scripts/deploy-monitorings.sh 
 
 # Run the install-hooks.sh script
-send_slack_notification "🔄 Running install-hooks.sh script..."
-../scripts/install-hooks.sh
+send_slack_notification " Running install-hooks.sh script..."
+
+./scripts/install-hooks.sh
 
