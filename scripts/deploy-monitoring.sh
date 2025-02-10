@@ -58,15 +58,15 @@ server {
     resolver 127.0.0.11 valid=30s;
 
     # Prometheus location
-    location /prometheus {
-        proxy_pass http://prometheus:9090;  # Adjust the container name if needed
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    }
+    # location /prometheus {
+    #     proxy_pass http://prometheus:9090;  # Adjust the container name if needed
+    #     proxy_set_header Host \$host;
+    #     proxy_set_header X-Real-IP \$remote_addr;
+    #     proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    # }
 
     # Grafana location
-    location /grafana {
+    location / {
         proxy_pass http://grafana:3000;  # Adjust the container name if needed
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
@@ -74,12 +74,12 @@ server {
     }
 
     # Loki location
-    location /loki {
-        proxy_pass http://loki:3100;  # Adjust the container name if needed
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    }
+    # location /loki {
+    #     proxy_pass http://loki:3100;  # Adjust the container name if needed
+    #     proxy_set_header Host \$host;
+    #     proxy_set_header X-Real-IP \$remote_addr;
+    #     proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    # }
 }
 
 EOL
