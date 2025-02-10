@@ -49,7 +49,7 @@ jobs:
             docker-compose stop app nginx && docker-compose rm -f app nginx
             
             # git fetch origin
-            git reset --hard origin/main
+            # git reset --hard origin/main
             # git reset --hard HEAD
             git pull origin main
             echo "${{ secrets.PAT_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
