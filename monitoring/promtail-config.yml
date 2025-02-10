@@ -16,3 +16,20 @@ scrape_configs:
         labels:
           job: varlogs
           __path__: /var/log/*.log
+          
+  - job_name: nginx
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: nginx
+          __path__: /var/log/nginx/*.log
+          
+
+  - job_name: app
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: app
+          __path__: /var/lib/docker/containers/*/*-json.log

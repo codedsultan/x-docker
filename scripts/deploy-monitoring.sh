@@ -47,8 +47,8 @@ server {
     server_name monitoring.xurl.fyi;
 
     # SSL certificate and key paths
-    ssl_certificate /etc/letsencrypt/live/xurl.fyi/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/xurl.fyi/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/xurl.fyi.fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/xurl.fyi.key;
 
     # SSL settings (adjust according to security best practices)
     ssl_protocols TLSv1.2 TLSv1.3;

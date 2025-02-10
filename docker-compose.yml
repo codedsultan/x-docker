@@ -76,6 +76,9 @@ services:
       - ../laravel:/var/www/html
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./ssl:/etc/letsencrypt/live
+      - ./nginx/logs:/var/log/nginx
+    labels:
+      - "monitoring.enabled=true"
     depends_on:
       - app
     networks:
@@ -164,6 +167,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     restart: unless-stopped
+    # user: "472:472"  
     env_file:
       - .env
     environment:
@@ -195,6 +199,7 @@ services:
     volumes:
       - /var/log:/var/log
       - ./monitoring/promtail-config.yml:/etc/promtail/config.yml
+      - ./nginx/logs:/var/log/nginx
     networks:
       - app-network
 

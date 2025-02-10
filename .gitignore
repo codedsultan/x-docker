@@ -32,3 +32,6 @@ namecom.ini
 # /ssl/xurl.fyi.key
 /acme
 /nginx/conf.d/monitoring.conf
+/monitoring/grafana
+/scripts/hooks
+/scripts/install-hooks.sh
