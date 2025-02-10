@@ -28,9 +28,7 @@ services:
 
   # FastAPI Application
   api:
-    build:
-      context: ../fastapi
-      dockerfile: Dockerfile
+    image: ghcr.io/codesultan-ix/jet-fast-api:latest
     container_name: fastapi-app
     restart: unless-stopped
     volumes:
