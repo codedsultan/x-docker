@@ -76,6 +76,9 @@ services:
       - ../laravel:/var/www/html
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./ssl:/etc/letsencrypt/live
+      - ./nginx/logs:/var/log/nginx
+    labels:
+      - "monitoring.enabled=true"
     depends_on:
       - app
     networks:
@@ -196,6 +199,7 @@ services:
     volumes:
       - /var/log:/var/log
       - ./monitoring/promtail-config.yml:/etc/promtail/config.yml
+      - ./nginx/logs:/var/log/nginx
     networks:
       - app-network
 
