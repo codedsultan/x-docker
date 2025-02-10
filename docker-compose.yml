@@ -87,6 +87,10 @@ services:
       - NAMECOM_USERNAME=${NAMECOM_USERNAME}
       - NAMECOM_TOKEN=${NAMECOM_TOKEN}
       - SLACK_MONITORING_WEB_HOOK=${SLACK_MONITORING_WEB_HOOK}
+      - EMAIL=${EMAIL}
+      - STAGING=${STAGING}
+      - DOMAIN=${DOMAIN}
+
     logging:
       driver: "json-file"
       options:
