@@ -32,7 +32,7 @@ services:
     container_name: fastapi-app
     restart: unless-stopped
     volumes:
-      - ../fastapi:/app
+      - /var/www/apps/fastapi:/app
     environment:
       - ENVIRONMENT=production
     networks:
