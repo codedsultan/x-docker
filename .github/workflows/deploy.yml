@@ -47,9 +47,11 @@ jobs:
             set -euxo pipefail
             cd "${{ secrets.DEPLOY_PATH }}"
             docker-compose stop app nginx && docker-compose rm -f app nginx
-            git pull origin main -f
+            
             # git fetch origin
             # git reset --hard origin/main
+            # git reset --hard HEAD
+            git pull origin main
             echo "${{ secrets.PAT_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
             docker-compose pull -q app nginx
             docker-compose up -d --remove-orphans app nginx
