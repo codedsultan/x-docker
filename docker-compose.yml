@@ -72,6 +72,7 @@ services:
       - "443:443"
     volumes:
       - ../laravel:/var/www/html
+      - /var/www/apps/nodejs/static/images:/var/www/html/static/images
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./ssl:/etc/letsencrypt/live
       # - ./nginx/logs:/var/log/nginx
