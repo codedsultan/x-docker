@@ -49,7 +49,7 @@ services:
     container_name: nodejs-app
     restart: unless-stopped
     volumes:
-      - /var/www/apps/nodejs:/app
+      - /var/www/apps/nodejs/static:/kutt/static
       - /var/www/apps/nodejs/db_data_sqlite:/var/lib/kutt
       - /var/www/apps/nodejs/custom:/kutt/custom 
     env_file:
