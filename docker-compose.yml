@@ -47,7 +47,7 @@ services:
   app:
     image: ghcr.io/codedsultan/xurl:latest
     container_name: nodejs-app
-    user: "1000:1000"  
+    # user: "1000:1000"  
     restart: unless-stopped
     volumes:
       - /var/www/apps/nodejs/static:/kutt/static
