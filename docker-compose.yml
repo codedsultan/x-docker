@@ -50,7 +50,7 @@ services:
     # user: "1000:1000"  
     restart: unless-stopped
     volumes:
-      - /var/www/apps/nodejs/static:/kutt/static
+      # - /var/www/apps/nodejs/static:/kutt/static
       - /var/www/apps/nodejs/db_data_sqlite:/var/lib/kutt
       - /var/www/apps/nodejs/custom:/kutt/custom 
     env_file:
@@ -74,7 +74,7 @@ services:
     volumes:
       - /var/www/apps/docker/nginx/conf.d:/etc/nginx/conf.d
       - /var/www/apps/docker/ssl:/etc/letsencrypt/live
-      - /var/www/apps/nodejs/static:/usr/share/nginx/html/app1/static
+      - /var/www/apps/docker/nginx/static:/usr/share/nginx/html/app1/static
       - /var/www/apps/docker/nginx/acme:/home/deploy/.acme.sh
       - /var/www/apps/docker/nginx/logs:/var/log/nginx
 
