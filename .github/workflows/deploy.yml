@@ -51,8 +51,9 @@ jobs:
             # git fetch origin
             # git reset --hard origin/main
             # git reset --hard HEAD
-            git add .
-            git commit -m "Update"
+            # git add .
+            # git commit -m "Update"
+            git reset --hard origin/main
             git pull origin main
             echo "${{ secrets.PAT_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
             docker-compose pull -q app nginx

@@ -1,53 +1,53 @@
-name: Deploy Monitoring
-on:
-  push:
-    branches: [ monitoring ]
+# name: Deploy Monitoring
+# on:
+#   push:
+#     branches: [ monitoring ]
 
-jobs:
+# jobs:
 
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4
 
-      - name: Setup SSH Agent
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+#       - name: Setup SSH Agent
+#         uses: webfactory/ssh-agent@v0.5.4
+#         with:
+#           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           
-      - name: Add GitHub to Known Hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+#       - name: Add GitHub to Known Hosts
+#         run: |
+#           mkdir -p ~/.ssh
+#           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
-      - name: Configure git to use merge
-        run: git config --global pull.rebase false
+#       - name: Configure git to use merge
+#         run: git config --global pull.rebase false
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.PAT_TOKEN }}
+#       - name: Log in to GitHub Container Registry
+#         uses: docker/login-action@v2
+#         with:
+#           registry: ghcr.io
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.PAT_TOKEN }}
           
-      - name: Deploy Monitoring Services
-        env:
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-        run: |
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}" << 'ENDSSH'
-            set -euxo pipefail  # Exit on error, unset vars, pipeline failures
-            cd "${{ secrets.DEPLOY_PATH }}"
-            # docker-compose down --remove-orphans
-            docker-compose stop prometheus grafana loki promtail alertmanager && docker-compose rm -f prometheus grafana loki promtail alertmanager
-            git add .
-            git commit -m "Update"
-            git pull origin monitoring
-            echo "${{ secrets.PAT_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-            docker-compose pull -q prometheus grafana loki promtail alertmanager
-            docker-compose up -d --remove-orphans prometheus grafana loki promtail alertmanager
-            bash scripts/deploy-monitoring.sh
-          ENDSSH
+#       - name: Deploy Monitoring Services
+#         env:
+#           SERVER_IP: ${{ secrets.SERVER_IP }}
+#           SERVER_USER: ${{ secrets.SERVER_USER }}
+#           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+#         run: |
+#           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}" << 'ENDSSH'
+#             set -euxo pipefail  # Exit on error, unset vars, pipeline failures
+#             cd "${{ secrets.DEPLOY_PATH }}"
+#             # docker-compose down --remove-orphans
+#             docker-compose stop prometheus grafana loki promtail alertmanager && docker-compose rm -f prometheus grafana loki promtail alertmanager
+#             git add .
+#             git commit -m "Update"
+#             git pull origin monitoring
+#             echo "${{ secrets.PAT_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+#             docker-compose pull -q prometheus grafana loki promtail alertmanager
+#             docker-compose up -d --remove-orphans prometheus grafana loki promtail alertmanager
+#             bash scripts/deploy-monitoring.sh
+#           ENDSSH
 
