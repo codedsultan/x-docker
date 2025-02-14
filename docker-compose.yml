@@ -79,7 +79,7 @@ services:
       - "443:443"
     volumes:
       - /var/www/apps/docker/nginx/conf.d:/etc/nginx/conf.d
-      - /var/www/apps/docker/ssl:/etc/letsencrypt/live
+      - /var/www/apps/new_ssl:/etc/letsencrypt/live
       - /var/www/apps/docker/nginx/static:/usr/share/nginx/html/app1/static
       - /var/www/apps/docker/nginx/acme:/home/deploy/.acme.sh
       - /var/www/apps/docker/nginx/logs:/var/log/nginx
