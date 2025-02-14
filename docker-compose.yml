@@ -77,8 +77,8 @@ services:
       - /var/www/apps/docker/nginx/static:/usr/share/nginx/html/app1/static
       - /var/www/apps/docker/nginx/acme:/home/deploy/.acme.sh
       - /var/www/apps/docker/nginx/logs:/var/log/nginx
-
-      # - ./nginx/logs:/var/log/nginx
+      - /var/www/apps/docker/nginx/errors:/var/www/errors
+    
     labels:
       - "monitoring.enabled=true"
     depends_on:
