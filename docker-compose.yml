@@ -120,7 +120,7 @@ services:
       # MYSQL_USER: ${DB_USERNAME}
       # MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - ./mysql/data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
       - ./mysql/conf.d:/etc/mysql/conf.d
     networks:
       - app-network
@@ -136,7 +136,7 @@ services:
     container_name: redis
     restart: unless-stopped
     volumes:
-      - ./redis/data:/data
+      - redis-data:/data
     networks:
       - app-network
     logging:
@@ -230,6 +230,10 @@ services:
       - app-network
     ports:
       - "9093:9093"
+
+volumes:
+  mysql-data:
+  redis-data:
 
 networks:
   app-network:
