@@ -28,8 +28,8 @@ storage/media-library/temp
 !.yarn/sdks
 !.yarn/versions
 namecom.ini
-/ssl/xurl.fyi.fullchain.pem
-/ssl/xurl.fyi.key
+# /ssl/xurl.fyi.fullchain.pem
+# /ssl/xurl.fyi.key
 /acme
 /nginx/conf.d/monitoring.conf
 /monitoring/grafana
