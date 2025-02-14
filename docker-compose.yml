@@ -14,6 +14,8 @@ services:
       - /var/www/apps/laravel/public:/var/www/html/public  # Persist public assets (optional)
       - /var/www/apps/laravel/storage:/var/www/html/storage  # Persist storage
       - /var/www/apps/laravel/.env:/var/www/html/.env
+      - vendor:/var/www/html/vendor
+      
     environment:
       - APP_ENV=production
       - DB_HOST=mysql
