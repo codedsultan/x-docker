@@ -119,6 +119,10 @@ services:
       # MYSQL_DATABASE: ${DB_DATABASE}
       # MYSQL_USER: ${DB_USERNAME}
       # MYSQL_PASSWORD: ${DB_PASSWORD}
+        # MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      # MYSQL_DATABASE: ${DB_DATABASE}
+      # MYSQL_USER: ${DB_USERNAME}
+      # MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - mysql-data:/var/lib/mysql
       - ./mysql/conf.d:/etc/mysql/conf.d
@@ -234,6 +238,7 @@ services:
 volumes:
   mysql-data:
   redis-data:
+  vendor:
 
 networks:
   app-network:
