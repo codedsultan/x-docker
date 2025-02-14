@@ -3,13 +3,14 @@ version: '3.8'
 services:
   # Laravel Application
   blog:
-    build:
-      context: ../laravel
-      dockerfile: Dockerfile
+    image: ghcr.io/vecitech/infinitus:latest
+    # build:
+    #   context: ../laravel
+    #   dockerfile: Dockerfile
     container_name: laravel-app
     restart: unless-stopped
     volumes:
-      - ../laravel:/var/www/html
+      - /var/www/apps/laravel:/var/www/html
     environment:
       - APP_ENV=production
       - DB_HOST=mysql
