@@ -22,6 +22,11 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
+      - name: Add Server to Known Hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
       - name: Configure git to use merge
         run: git config --global pull.rebase false
 
@@ -43,7 +48,7 @@ jobs:
           SERVER_USER: ${{ secrets.SERVER_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}" << 'ENDSSH'
+          ssh -o "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}" << 'ENDSSH'
             set -euxo pipefail
             cd "${{ secrets.DEPLOY_PATH }}"
             docker-compose stop app nginx && docker-compose rm -f app nginx
