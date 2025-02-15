@@ -35,6 +35,7 @@ namecom.ini
 /monitoring/grafana
 /scripts/hooks
 /scripts/install-hooks.sh
+.env.production
 
 # cp /var/www/apps/docker-backup/nginx/conf.d/monitoring.conf  /var/www/apps/docker/nginx/conf.d/monitoring.conf
 # cp /var/www/apps/docker-backup/nginx/conf.d/default.conf  /var/www/apps/docker/nginx/conf.d/default.conf
