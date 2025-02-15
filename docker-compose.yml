@@ -79,7 +79,7 @@ services:
       - "443:443"
     volumes:
       - /var/www/apps/docker/nginx/conf.d:/etc/nginx/conf.d
-      - /var/www/apps/new_ssl:/etc/letsencrypt/live
+      - /var/www/apps/ssl/:/etc/letsencrypt/live
       - /var/www/apps/docker/nginx/static:/usr/share/nginx/html/app1/static
       - /var/www/apps/docker/nginx/acme:/home/deploy/.acme.sh
       - /var/www/apps/docker/nginx/logs:/var/log/nginx
@@ -169,7 +169,17 @@ services:
       options:
         max-size: "50m"
         max-file: "3"
-
+  # cAdvisor
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    restart: always
+    ports:
+      - "8080:8080"  # Expose cAdvisor web UI
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
   # Prometheus (Monitoring)
   prometheus:
     image: prom/prometheus:latest
