@@ -85,7 +85,7 @@ services:
       - /var/www/apps/ssl/:/etc/letsencrypt/live
       - /var/www/apps/nodejs/static:/var/www/nodejs/static
       # - /var/www/apps/docker/nginx/acme:/home/deploy/.acme.sh
-      - /var/www/apps/docker/nginx/logs:/var/log/nginx
+      - /var/www/apps/nginx/logs:/var/log/nginx
       - /var/www/apps/docker/nginx/errors:/var/www/errors
       - /var/www/apps/laravel:/var/www/laravel
       - /var/www/apps/laravel/public:/var/www/laravel/public  # Persist public assets (optional)
