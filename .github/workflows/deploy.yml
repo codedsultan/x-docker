@@ -81,19 +81,19 @@ jobs:
             docker-compose pull -q app nginx
             docker-compose up -d --remove-orphans app nginx
 
-            sudo mkdir -p /var/www/apps/nodejs/static
-            NODE_CONTAINER=$(docker ps --filter "name=nodejs-app" --format "{{.ID}}")
+            # sudo mkdir -p /var/www/apps/nodejs/static
+            # NODE_CONTAINER=$(docker ps --filter "name=nodejs-app" --format "{{.ID}}")
             
-            if [ -z "$NODE_CONTAINER" ]; then
-              echo "Node.js container is not running. Starting it..."
-              sudo docker-compose up -d app
-              sleep 10
-              NODE_CONTAINER=$(docker ps --filter "name=nodejs-apps" --format "{{.ID}}")
-            fi
+            # if [ -z "$NODE_CONTAINER" ]; then
+            #   echo "Node.js container is not running. Starting it..."
+            #   sudo docker-compose up -d app
+            #   sleep 10
+            #   NODE_CONTAINER=$(docker ps --filter "name=nodejs-apps" --format "{{.ID}}")
+            # fi
 
-            # sudo docker cp $NODE_CONTAINER:/kutt/static /var/www/apps/nodejs/static
-            sudo docker cp nodejs-app:/kutt/static/. /var/www/apps/nodejs/static/
-            sudo chown -R www-data:www-data /var/www/apps/nodejs/static
-            sudo chmod -R 755 /var/www/apps/nodejs/static
-            sudo docker-compose restart app
+            # # sudo docker cp $NODE_CONTAINER:/kutt/static /var/www/apps/nodejs/static
+            # sudo docker cp nodejs-app:/kutt/static/. /var/www/apps/nodejs/static/
+            # sudo chown -R www-data:www-data /var/www/apps/nodejs/static
+            # sudo chmod -R 755 /var/www/apps/nodejs/static
+            # sudo docker-compose restart app
                 
