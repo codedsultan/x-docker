@@ -83,13 +83,13 @@ services:
     volumes:
       - /var/www/apps/nginx/conf.d:/etc/nginx/conf.d
       - /var/www/apps/ssl/:/etc/letsencrypt/live
-      - /var/www/apps/nodejs/static:/var/www/nodejs/static
+      - /var/www/apps/nodejs/static:/usr/share/nginx/html/nodejs/static
       # - /var/www/apps/docker/nginx/acme:/home/deploy/.acme.sh
       - /var/www/apps/nginx/logs:/var/log/nginx
-      - /var/www/apps/docker/nginx/errors:/var/www/errors
+      - /var/www/apps/docker/nginx/errors:/usr/share/nginx/html/errors
       # - /var/www/apps/laravel:/var/www/laravel
-      - /var/www/apps/laravel/public:/var/www/laravel/public  # Persist public assets (optional)
-      - /var/www/apps/laravel:/var/www/laravel/storage # Persist storage
+      - /var/www/apps/laravel/public:/usr/share/nginx/html/laravel/public:ro  # Persist public assets (optional)
+      - /var/www/apps/laravel:/usr/share/nginx/html/laravel/storage:ro # Persist storage
     
     labels:
       - "monitoring.enabled=true"
