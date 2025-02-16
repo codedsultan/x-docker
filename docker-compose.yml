@@ -64,7 +64,7 @@ services:
       - /var/www/apps/nodejs/custom:/kutt/custom 
       # - /var/www/apps/nodejs/.env:/kutt/.env:ro
     env_file:
-      - /var/www/apps/nodejs/.env:ro
+      - /var/www/apps/nodejs/.env
     networks:
       - app-network
     logging:
