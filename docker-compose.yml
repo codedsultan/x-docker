@@ -13,7 +13,7 @@ services:
       # - /var/www/apps/laravel:/var/www/html
       # - /var/www/apps/laravel/public:/var/www/html/public  # Persist public assets (optional)
       - laravel-public:/var/www/html/public
-      - laravel-storage::/var/www/html/storage 
+      - laravel-storage:/var/www/html/storage 
       # - /var/www/apps/laravel/storage:/var/www/html/storage  # Persist storage
       # - /var/www/apps/laravel/storage:/var/www/html/storage  # Persist storage
       - /var/www/apps/laravel/.env:/var/www/html/.env
