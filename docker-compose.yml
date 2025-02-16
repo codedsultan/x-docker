@@ -16,7 +16,8 @@ services:
       # - /var/www/apps/laravel/storage:/var/www/html/storage  # Persist storage
       - /var/www/apps/laravel/.env:/var/www/html/.env
       - vendor:/var/www/html/vendor
-      
+    # ports:
+    #   - 8080:8080
     environment:
       - APP_ENV=production
       - DB_HOST=mysql
