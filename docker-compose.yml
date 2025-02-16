@@ -59,11 +59,12 @@ services:
     # user: "1000:1000"  
     restart: unless-stopped
     volumes:
-      - /var/www/apps/nodejs/static:/kutt/static
+      # - /var/www/apps/nodejs/static:/kutt/static
       - db_data_sqlite:/var/lib/kutt
       - /var/www/apps/nodejs/custom:/kutt/custom 
+      # - /var/www/apps/nodejs/.env:/kutt/.env:ro
     env_file:
-      - /var/www/apps/nodejs/.env
+      - /var/www/apps/nodejs/.env:ro
     networks:
       - app-network
     logging:
