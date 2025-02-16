@@ -86,6 +86,7 @@ services:
       - /var/www/apps/docker/nginx/acme:/home/deploy/.acme.sh
       - /var/www/apps/docker/nginx/logs:/var/log/nginx
       - /var/www/apps/docker/nginx/errors:/var/www/errors
+      - /var/www/apps/laravel/public:/var/www/html/public  # Persist public assets (optional)
     
     labels:
       - "monitoring.enabled=true"
@@ -116,7 +117,7 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: jetblog
       MYSQL_USER: user
-      MYSQL_PASSWORD:  password
+      MYSQL_PASSWORD: password
       # MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       # MYSQL_DATABASE: ${DB_DATABASE}
       # MYSQL_USER: ${DB_USERNAME}
