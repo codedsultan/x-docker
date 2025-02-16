@@ -91,7 +91,8 @@ jobs:
               NODE_CONTAINER=$(docker ps --filter "name=nodejs-apps" --format "{{.ID}}")
             fi
 
-            sudo docker cp $NODE_CONTAINER:/kutt/static /var/www/apps/nodejs/static
+            # sudo docker cp $NODE_CONTAINER:/kutt/static /var/www/apps/nodejs/static
+            sudo docker cp nodejs-app:/kutt/static/. /var/www/apps/nodejs/static/
             sudo chown -R www-data:www-data /var/www/apps/nodejs/static
             sudo chmod -R 755 /var/www/apps/nodejs/static
             sudo docker-compose restart app
