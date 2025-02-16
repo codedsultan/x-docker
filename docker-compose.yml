@@ -260,7 +260,7 @@ volumes:
   mysql-data:
   redis-data:
   vendor:
-  storage-data:
+  # storage-data:
   db_data_sqlite:
   laravel-storage:
   laravel-public:
