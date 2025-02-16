@@ -87,7 +87,7 @@ services:
       # - /var/www/apps/docker/nginx/acme:/home/deploy/.acme.sh
       - /var/www/apps/nginx/logs:/var/log/nginx
       - /var/www/apps/docker/nginx/errors:/var/www/errors
-      - /var/www/apps/laravel:/var/www/laravel
+      # - /var/www/apps/laravel:/var/www/laravel
       - /var/www/apps/laravel/public:/var/www/laravel/public  # Persist public assets (optional)
       - /var/www/apps/laravel:/var/www/laravel/storage # Persist storage
     
