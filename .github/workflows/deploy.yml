@@ -97,6 +97,7 @@ jobs:
             docker-compose pull -q app nginx
             docker-compose up -d --remove-orphans app nginx
             sudo docker cp nodejs-app:/kutt/static /var/www/apps/nodejs/
+            sudo cp -r /var/www/apps/docker/nginx/conf.d/* /var/www/apps/nginx/conf.d/
             sudo chmod -R 777 /var/www/apps/nodejs/static
 
 
