@@ -92,7 +92,8 @@ services:
       - nodejs-static:/usr/share/nginx/html/nodejs/static
       - /var/www/apps/nginx/logs:/var/log/nginx
       - /var/www/apps/docker/nginx/errors:/usr/share/nginx/html/errors
-      - /var/www/apps/laravel:/usr/share/nginx/html/laravel
+      # - /var/www/apps/laravel:/usr/share/nginx/html/laravel
+      - /var/www/apps/laravel:/var/www/html/laravel
       # - /var/www/apps/laravel/public:/usr/share/nginx/html/laravel/public:ro  # Persist public assets (optional)
       # - /var/www/apps/laravel:/usr/share/nginx/html/laravel/storage:ro # Persist storage
       # - laravel-public:/usr/share/nginx/html/laravel/public  # Persist public assets (optional)
