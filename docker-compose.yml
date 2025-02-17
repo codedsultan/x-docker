@@ -10,7 +10,7 @@ services:
     container_name: laravel-app
     restart: unless-stopped
     volumes:
-      - /var/www/apps/laravel:/var/www/html
+      - /var/www/apps/laravel:/var/www/html/laravel
       # - /var/www/apps/laravel/public:/var/www/html/public  # Persist public assets (optional)
       # - laravel-public:/var/www/html/public
       # - laravel-storage:/var/www/html/storage 
