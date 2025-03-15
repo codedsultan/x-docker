@@ -37,7 +37,7 @@ services:
         max-file: "3"
 
   imagexbasic:
-    image: ghcr.io/vecitech/imagex-basic:latest
+    image: ghcr.io/codedsultan/imagex-basic:latest
     container_name: imagexbasic
     restart: unless-stopped
     volumes:
