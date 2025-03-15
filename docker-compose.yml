@@ -45,7 +45,7 @@ services:
       
     environment:
       - APP_ENV=production
-      - DB_HOST=imagexbasicmysql
+      - DB_HOST=imagexmysql
       - REDIS_HOST=redis
       - QUEUE_CONNECTION=redis
     depends_on:
@@ -171,9 +171,9 @@ services:
         max-size: "50m"
         max-file: "3"
 
-  imagexbasicmysql:
+  imagexmysql:
     image: mysql:8.0
-    container_name: mysql
+    container_name: imagexmysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: password
