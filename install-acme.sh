@@ -152,3 +152,18 @@ sudo acme.sh --issue --dns dns_namecom -d yourdomain.com -d *.yourdomain.com \
 #     --fullchain-file "/var/www/apps/ssl/xurl.fyi.fullchain.pem" \
 #     --reloadcmd "nginx -s reload" \
 #     --force
+
+
+acme.sh --issue \
+    --dns dns_namecom \
+    -d "xurl.fyi" \
+    -d "*.xurl.fyi" \
+    --server letsencrypt \
+    --keylength 4096 \
+    --email "codesultan369@gmail.com" \
+    --key-file "/var/www/apps/ssl/xurl.fyi.key" \
+    --fullchain-file "/var/www/apps/ssl/xurl.fyi.fullchain.pem" \
+    --force
+
+    
+    
