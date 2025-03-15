@@ -45,3 +45,4 @@ namecom.ini
 # cp -r /var/www/apps/docker/ssl /var/www/apps/ssl
 # copy .env 
 # cp /var/www/apps/docker-backup/.env /var/www/apps/docker/.env
+.qodo

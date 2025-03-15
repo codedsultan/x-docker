@@ -36,6 +36,30 @@ services:
         max-size: "50m"
         max-file: "3"
 
+  imagexbasic:
+    image: ghcr.io/vecitech/imagex-basic:latest
+    container_name: imagexbasic
+    restart: unless-stopped
+    volumes:
+      - /var/www/apps/imagexbasic:/var/www/html/imagexbasic
+      
+    environment:
+      - APP_ENV=production
+      - DB_HOST=imagexbasicmysql
+      - REDIS_HOST=redis
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - app-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+
   # FastAPI Application
   api:
     image: ghcr.io/codesultan-ix/jet-fast-api:latest
@@ -138,6 +162,34 @@ services:
       # MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d
+    networks:
+      - app-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+  imagexbasicmysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: imagexbasic
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      # MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      # MYSQL_DATABASE: ${DB_DATABASE}
+      # MYSQL_USER: ${DB_USERNAME}
+      # MYSQL_PASSWORD: ${DB_PASSWORD}
+        # MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      # MYSQL_DATABASE: ${DB_DATABASE}
+      # MYSQL_USER: ${DB_USERNAME}
+      # MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - imagexbasic-data:/var/lib/mysql
       - ./mysql/conf.d:/etc/mysql/conf.d
     networks:
       - app-network
@@ -261,11 +313,12 @@ services:
 volumes:
   mysql-data:
   redis-data:
+  imagexbasic-data:
   vendor:
   # storage-data:
   db_data_sqlite:
-  laravel-storage:
-  laravel-public:
+  # laravel-storage:
+  # laravel-public:
   nodejs-static:
 
 networks:
